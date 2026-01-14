@@ -1,0 +1,63 @@
+# Progress Log: user-default-group
+
+Created: 2026-01-14 21:00:28
+
+## Codebase Patterns
+- Repository pattern: DataRepository delegates to SQLRepository (two-layer abstraction)
+- Models use SQLAlchemy ORM with relationships defined bidirectionally
+- Database operations use db.add(), db.flush(), db.commit(), db.refresh() pattern
+- Error handling: wrap DB operations in try-except with rollback on failure
+
+## Key Files
+- shared/data/repository.py - Public API for data access
+- shared/data/sql_repository.py - SQLAlchemy implementation
+- shared/models/user.py, group.py, group_member.py - ORM models
+
+---
+
+## 2026-01-14 - Story 1.1 COMPLETE
+- Added create_default_group_for_user(user: User) -> Group to SQLRepository
+- Method creates Group with name='Default Group' and created_by=user.id
+- Creates GroupMember with role='admin' for the new user
+- Updates user.default_group_id to the created group ID
+- Wrapped in transaction (db.flush() for group ID, then add member, then commit)
+- Added corresponding wrapper method to DataRepository
+- Used try-except with rollback for error handling
+
+**Files modified:**
+- shared/data/sql_repository.py: +37 lines
+- shared/data/repository.py: +10 lines
+
+**Commits:**
+- feat: 1.1 - Create repository method to create default group for new users (004ca12)
+
+
+## 2026-01-14 - Story 1.2 COMPLETE
+- Modified register_user() in shared/core/expense_tracker.py to auto-create default group for new users
+- Method now checks if user is new (existing_user is None) after adding to DB
+- Calls repository.create_default_group_for_user(added_user) for new users only
+- Wrapped call in try-except to handle errors gracefully without blocking user registration
+- Existing users skip group creation entirely (returns False, existing_user as before)
+- Method signature and return type unchanged (Tuple[bool, User])
+
+**Files modified:**
+- shared/core/expense_tracker.py: Modified register_user() method (+6 lines)
+
+**Commits:**
+- feat: 1.2 - Modify register_user() to auto-create default group for new users (5622079)
+
+
+## 2026-01-14 - Story 1.3 COMPLETE
+- Added logging import to shared/data/sql_repository.py
+- Added logging.info() in create_default_group_for_user() for successful group creation
+- Logs include user_id and group_id for debugging visibility
+- Added logging.error() in exception handler to capture failures with user_id and error details
+- Business logic in expense_tracker.py already had error logging for the wrapper call
+- Verified syntax and imports work correctly
+
+**Files modified:**
+- shared/data/sql_repository.py: +1 import, +7 lines for logging statements
+
+**Commits:**
+- feat: 1.3 - Add logging for default group creation process (0427f34)
+
