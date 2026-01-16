@@ -46,21 +46,21 @@
        "passes": true,
        "notes": "Core feature implementation - registration flow updated"
     },
-    {
-      "id": "2.1",
-      "category": "functional",
-      "story": "Verify API routes support default group operations",
-      "steps": [
-        "Review api/routes/groups.py GET /api/v1/groups endpoint",
-        "Verify default group appears in group list",
-        "Test PUT /api/v1/groups/{group_id} endpoint with default group",
-        "Verify group name and description can be edited"
-      ],
-      "acceptance": "Default group can be listed and edited via API routes without errors",
-      "priority": 4,
-      "passes": false,
-      "notes": "Existing routes should work - verify no special handling needed"
-    },
+     {
+       "id": "2.1",
+       "category": "functional",
+       "story": "Verify API routes support default group operations",
+       "steps": [
+         "Review api/routes/groups.py GET /api/v1/groups endpoint",
+         "Verify default group appears in group list",
+         "Test PUT /api/v1/groups/{group_id} endpoint with default group",
+         "Verify group name and description can be edited"
+       ],
+       "acceptance": "Default group can be listed and edited via API routes without errors",
+       "priority": 4,
+       "passes": true,
+       "notes": "Existing routes work - no special handling needed for default group"
+     },
     {
       "id": "2.2",
       "category": "ui",
