@@ -4,111 +4,106 @@
     {
       "id": "1.1",
       "category": "technical",
-      "story": "Create a repository method to create a default group for a new user",
+      "story": "Add create_default_group method to SQLRepository class",
       "steps": [
-        "Add create_default_group_for_user() method in shared/data/repository.py",
-        "Method creates Group record with name='Default Group' and created_by=user.id",
-        "Create GroupMember record with role='admin' for the new user",
-        "Update user.default_group_id to the created group",
-        "Return the created Group object"
+        "Open shared/data/sql_repository.py",
+        "Add create_default_group(self, user: User) -> Group method",
+        "Implement group creation with name 'Default Group'",
+        "Create group_members entry with user as admin",
+        "Set user.default_group_id and commit transaction"
       ],
-      "acceptance": "Method exists, accepts User object, creates group and member record, updates user.default_group_id, returns Group",
-      "priority": 1,
-      "passes": true,
-      "notes": "Implementation added create_default_group_for_user() to both SQLRepository and DataRepository. Method creates Group with 'Default Group' name, creates admin GroupMember, updates user.default_group_id, and returns the Group object. Wrapped in try-except for error handling."
+       "acceptance": "Method successfully creates a default group with proper database entries and user is set as admin",
+       "priority": 1,
+       "passes": true,
+       "notes": "Foundation for the feature - must handle database transactions correctly"
     },
     {
       "id": "1.2",
       "category": "technical",
-      "story": "Modify register_user() to auto-create default group for new users",
+      "story": "Add create_default_group wrapper to DataRepository class",
       "steps": [
-        "Open shared/core/expense_tracker.py and find register_user() method",
-        "After adding user to database, check if it's a new user (result indicates new)",
-        "Call create_default_group_for_user(user) for new users only",
-        "Ensure existing users skip group creation",
-        "Verify register_user() still returns Tuple[bool, User]"
+        "Open shared/data/repository.py",
+        "Add create_default_group(self, user: User) -> Group method",
+        "Delegate to self.store.create_default_group(user)"
       ],
-      "acceptance": "New users automatically get default group; existing users return without changes; method signature unchanged",
-      "priority": 2,
-      "passes": true,
-      "notes": "Implementation modified register_user() to call create_default_group_for_user() for new users. Method checks if user is new (existing_user is None), then creates default group wrapped in try-except for error handling. Existing users skip group creation entirely."
+       "acceptance": "Wrapper method exists and properly delegates to SQL repository implementation",
+       "priority": 2,
+       "passes": true,
+       "notes": "Maintains abstraction layer pattern"
     },
     {
       "id": "1.3",
-      "category": "technical",
-      "story": "Add logging for default group creation process",
-      "steps": [
-        "Add logging in create_default_group_for_user() method",
-        "Log when group is created successfully",
-        "Log any errors during group member creation",
-        "Include user_id and group_id in log messages for debugging"
-      ],
-      "acceptance": "Logs show group creation details; errors are captured and logged",
-      "priority": 3,
-      "passes": true,
-      "notes": "Implementation added logging.info() for successful group creation with user_id and group_id. Added logging.error() to capture failures with user_id and error details. Logging integrated into SQLRepository.create_default_group_for_user() method. Business logic in expense_tracker.py already had error logging."
-    },
-    {
-      "id": "1.4",
       "category": "functional",
-      "story": "Test default group auto-creation via Telegram /start command",
+      "story": "Integrate create_default_group into user registration flow",
       "steps": [
-        "Manually send /start command to bot with a new Telegram user ID",
-        "Verify new user is registered in database",
-        "Verify Default Group was created for the user",
-        "Verify user is added as admin member to the group",
-        "Verify user.default_group_id points to the created group"
+        "Open shared/core/expense_tracker.py",
+        "Locate register_user() method",
+        "Add self.repository.create_default_group(added_user) after add_user() call",
+        "Ensure new users get default group automatically"
       ],
-      "acceptance": "New user has Default Group created; user is admin; default_group_id is set correctly",
-      "priority": 4,
-      "passes": false,
-      "notes": ""
+       "acceptance": "New user registration creates default group with no manual intervention required",
+       "priority": 3,
+       "passes": true,
+       "notes": "Core feature implementation - registration flow updated"
     },
     {
       "id": "2.1",
-      "category": "ui",
-      "story": "Display visual indicator for default group in Groups page",
+      "category": "functional",
+      "story": "Verify API routes support default group operations",
       "steps": [
-        "Open app/src/pages/Groups.tsx",
-        "Find the group list rendering component",
-        "Add visual indicator (icon, badge, or highlight) showing which group is default",
-        "Ensure indicator syncs with user.default_group_id"
+        "Review api/routes/groups.py GET /api/v1/groups endpoint",
+        "Verify default group appears in group list",
+        "Test PUT /api/v1/groups/{group_id} endpoint with default group",
+        "Verify group name and description can be edited"
       ],
-      "acceptance": "Default group is visually distinguished in the list; indicator is clear and visible",
-      "priority": 5,
+      "acceptance": "Default group can be listed and edited via API routes without errors",
+      "priority": 4,
       "passes": false,
-      "notes": ""
+      "notes": "Existing routes should work - verify no special handling needed"
     },
     {
       "id": "2.2",
       "category": "ui",
-      "story": "Allow users to rename their default group from frontend",
+      "story": "Verify frontend Groups page displays default group",
       "steps": [
-        "Verify Groups.tsx has edit functionality for groups",
-        "Test that groupsApi.updateGroup() works for default group",
-        "Confirm name changes are reflected in the UI",
-        "Verify group update preserves the default_group_id reference"
+        "Open app/src/pages/Groups.tsx",
+        "Verify default group appears in group list after registration",
+        "Test edit dialog functionality for default group",
+        "Confirm name and description updates persist"
       ],
-      "acceptance": "Users can edit default group name; changes persist; default reference is maintained",
-      "priority": 6,
+      "acceptance": "Default group displays and can be edited in frontend without errors",
+      "priority": 5,
       "passes": false,
-      "notes": "Feature may already exist; primarily verification task"
+      "notes": "Existing UI should work - no component changes expected"
     },
     {
       "id": "3.1",
-      "category": "technical",
-      "story": "Create migration script to backfill default groups for existing users",
+      "category": "ui",
+      "story": "Add visual indicator for default group in groups list",
       "steps": [
-        "Create script in scripts/ directory",
-        "Script finds users without default_group_id",
-        "For each user, create Default Group using create_default_group_for_user()",
-        "Log results: users processed, groups created, any errors",
-        "Script should be safely runnable multiple times (idempotent)"
+        "Open app/src/pages/Groups.tsx",
+        "Add badge or icon next to default group name",
+        "Display 'Default' label or star icon",
+        "Style to match design system"
       ],
-      "acceptance": "Script creates default groups for existing users without one; handles errors gracefully; is idempotent",
-      "priority": 11,
+      "acceptance": "Default group visually distinguished from other groups with clear indicator",
+      "priority": 6,
       "passes": false,
-      "notes": "Phase 3 - future backfill; not required for MVP"
+      "notes": "Phase 2 enhancement - improves UX clarity"
+    },
+    {
+      "id": "3.2",
+      "category": "functional",
+      "story": "Prevent deletion of user's default group",
+      "steps": [
+        "Locate group deletion logic in api/routes/groups.py or shared/core/expense_tracker.py",
+        "Add validation check: if group_id == user.default_group_id, reject deletion",
+        "Return appropriate error message to user"
+      ],
+      "acceptance": "Attempting to delete default group returns error; deletion is prevented",
+      "priority": 7,
+      "passes": false,
+      "notes": "Phase 2 safeguard - prevents data loss from user error"
     }
   ]
 }
