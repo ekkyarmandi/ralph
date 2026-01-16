@@ -55,7 +55,38 @@ Created: 2026-01-16 10:28:43
    - Conclusion: Frontend works without modifications - default group displays and edits work correctly
    - No frontend code changes needed - uses existing group display and edit mechanisms
 
+6. **3.1 - Add visual indicator for default group** ✓
+   - Added Star icon import from lucide-react
+   - Modified group list card header to display amber badge with star icon next to default group name
+   - Added similar badge in detail view header for consistency
+   - Badge displays "Default" label with filled star icon
+   - Styled with amber-100 background and amber-700 text to match design system
+   - Indicator appears both in groups list grid view and group detail view
+   - No new files created, only UI enhancements to existing component
+
+7. **3.2 - Prevent deletion of user's default group** ✓
+   - Added validation check in `delete_group()` function in `api/routes/groups.py`
+   - Check prevents deletion if group_id matches current_user.default_group_id
+   - Returns HTTP 400 error with message: "Cannot delete your default group. Set another group as default first."
+   - Error message guides user to change their default group before deletion
+   - Protection applied before any deletion operations (early return pattern)
+   - Existing logic for clearing default_group_id remains for other users' scenarios
+
+## Key Implementation Details
+- Validation added immediately after admin access check but before group retrieval operations
+- Uses existing User.default_group_id relationship field
+- Error code: HTTP 400 BAD_REQUEST (appropriate for business logic constraint)
+- Prevents accidental data loss from user error
+- Allows deletion once user changes their default group to another one
+
+## Files Modified
+- `api/routes/groups.py` - Added deletion prevention logic in delete_group() endpoint
+
+## Status
+ALL USER STORIES COMPLETE ✓
+All 7 stories in prd.json now have passes: true
+
 ## Next Steps
-- Add visual indicator for default group (story 3.1)
-- Prevent deletion of default group (story 3.2)
+- No remaining stories to implement
+- Feature is fully implemented
 

@@ -76,34 +76,34 @@
        "passes": true,
        "notes": "Existing UI works - verified default group displays and edits without changes"
      },
-    {
-      "id": "3.1",
-      "category": "ui",
-      "story": "Add visual indicator for default group in groups list",
-      "steps": [
-        "Open app/src/pages/Groups.tsx",
-        "Add badge or icon next to default group name",
-        "Display 'Default' label or star icon",
-        "Style to match design system"
-      ],
-      "acceptance": "Default group visually distinguished from other groups with clear indicator",
-      "priority": 6,
-      "passes": false,
-      "notes": "Phase 2 enhancement - improves UX clarity"
-    },
-    {
-      "id": "3.2",
-      "category": "functional",
-      "story": "Prevent deletion of user's default group",
-      "steps": [
-        "Locate group deletion logic in api/routes/groups.py or shared/core/expense_tracker.py",
-        "Add validation check: if group_id == user.default_group_id, reject deletion",
-        "Return appropriate error message to user"
-      ],
-      "acceptance": "Attempting to delete default group returns error; deletion is prevented",
-      "priority": 7,
-      "passes": false,
-      "notes": "Phase 2 safeguard - prevents data loss from user error"
-    }
+     {
+       "id": "3.1",
+       "category": "ui",
+       "story": "Add visual indicator for default group in groups list",
+       "steps": [
+         "Open app/src/pages/Groups.tsx",
+         "Add badge or icon next to default group name",
+         "Display 'Default' label or star icon",
+         "Style to match design system"
+       ],
+       "acceptance": "Default group visually distinguished from other groups with clear indicator",
+       "priority": 6,
+       "passes": true,
+       "notes": "Phase 2 enhancement - improves UX clarity"
+     },
+     {
+       "id": "3.2",
+       "category": "functional",
+       "story": "Prevent deletion of user's default group",
+       "steps": [
+         "Locate group deletion logic in api/routes/groups.py or shared/core/expense_tracker.py",
+         "Add validation check: if group_id == user.default_group_id, reject deletion",
+         "Return appropriate error message to user"
+       ],
+       "acceptance": "Attempting to delete default group returns error; deletion is prevented",
+       "priority": 7,
+       "passes": true,
+       "notes": "Phase 2 safeguard - prevents data loss from user error"
+     }
   ]
 }
