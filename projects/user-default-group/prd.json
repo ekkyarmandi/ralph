@@ -61,21 +61,21 @@
        "passes": true,
        "notes": "Existing routes work - no special handling needed for default group"
      },
-    {
-      "id": "2.2",
-      "category": "ui",
-      "story": "Verify frontend Groups page displays default group",
-      "steps": [
-        "Open app/src/pages/Groups.tsx",
-        "Verify default group appears in group list after registration",
-        "Test edit dialog functionality for default group",
-        "Confirm name and description updates persist"
-      ],
-      "acceptance": "Default group displays and can be edited in frontend without errors",
-      "priority": 5,
-      "passes": false,
-      "notes": "Existing UI should work - no component changes expected"
-    },
+     {
+       "id": "2.2",
+       "category": "ui",
+       "story": "Verify frontend Groups page displays default group",
+       "steps": [
+         "Open app/src/pages/Groups.tsx",
+         "Verify default group appears in group list after registration",
+         "Test edit dialog functionality for default group",
+         "Confirm name and description updates persist"
+       ],
+       "acceptance": "Default group displays and can be edited in frontend without errors",
+       "priority": 5,
+       "passes": true,
+       "notes": "Existing UI works - verified default group displays and edits without changes"
+     },
     {
       "id": "3.1",
       "category": "ui",
